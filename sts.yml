@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bitcoin-core
+  labels:
+    app: bitcoin-core
+spec:
+  serviceName: "bitcoin-core"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bitcoin-core
+  template:
+    metadata:
+      labels:
+        app: bitcoin-core
+    spec:
+      containers:
+        - name: bitcoin-core
+          image: ruimarinho/bitcoin-core:latest
+          args:
+            - "-printtoconsole"
+            - "-rpcallowip=0.0.0.0/0"
+            - "-rpcbind=0.0.0.0"
+            - "-rpcuser=naas"
+            - "-rpcpassword=baremetal"
+          ports:
+          - containerPort: 8332
+            name: rpc
+          - containerPort: 8333
+            name: p2p
+          volumeMounts:
+            - name: bitcoin-data
+              mountPath: /home/bitcoin/.bitcoin-data
+  volumeClaimTemplates:
+  - metadata:
+      name: bitcoin-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 300Gi # adjust this value based on your needs
