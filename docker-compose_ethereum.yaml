@@ -1,0 +1,68 @@
+version: "3.8"
+services:
+
+  erigon:
+    image: thorax/erigon:${ERIGON_VERSION:-v2.45.2}
+    command: |
+      --datadir=/erigon-data
+      --torrent.download.slots=7
+      --torrent.download.rate 90m
+      --http.api="engine,eth,erigon,web3,net,debug,trace,txpool,shh"
+      --ws
+      --http
+      --http.corsdomain="*"
+      --http.addr="0.0.0.0"
+      --http.vhosts='*'
+      --authrpc.port=8551
+      --authrpc.jwtsecret=/home/erigon/.local/share/erigon/jwt.hex
+      --state.cache=2000000
+      --rpc.gascap=50000000
+      --metrics
+    ports:
+      # - "8545:8545"
+      - "30303:30303/tcp"
+      - "30303:30303/udp"
+      - "42069:42069/tcp"
+      - "42069:42069/udp"
+    volumes:
+      - type: bind
+        source: ".ethereum"
+        target: /erigon-data
+      - ./jwt:/home/erigon/.local/share/erigon/
+    restart: unless-stopped
+    mem_swappiness: 0
+    networks:
+      - naas_network
+
+  lighthouse:
+    image: sigp/lighthouse:${LIGHTHOUSE_VERSION:-v4.2.0}
+    ports:
+      - ${LIGHTHOUSE_PORT_P2P:-9000}:9000/tcp # P2P TCP
+      - ${LIGHTHOUSE_PORT_P2P:-9000}:9000/udp # P2P UDP
+      - ${LIGHTHOUSE_PORT_HTTP:-5052}:5052    # HTTP API
+      - ${LIGHTHOUSE_PORT_METRICS:-5054}:5054 # Metrics
+    command: |
+      lighthouse bn
+      --network=mainnet
+      --checkpoint-sync-url=https://sync-mainnet.beaconcha.in
+      --execution-endpoint="http://erigon:8551"
+      --execution-jwt=/opt/jwt/jwt.hex
+      --datadir=/opt/app/beacon/
+      --debug-level=info
+      --http
+      --http-address=0.0.0.0
+      --http-port=5052
+      --metrics
+      --metrics-address=0.0.0.0
+      --metrics-port=5054
+      --metrics-allow-origin="*"
+    networks:
+      - naas_network
+    volumes:
+      - ./ethereum/lighthouse:/opt/app/beacon
+      - ./jwt:/opt/jwt
+    restart: unless-stopped
+
+networks:
+  naas_network:
+    name: naas_network
