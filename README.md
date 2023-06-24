@@ -1,5 +1,11 @@
 # basic-rpc
 
+# TLDR Diagram
+
+https://mermaid.live/edit#pako:eNplkMFuwjAMhl8l8imT2heoJibaMMFhMAHaYcrFagyNaJPKTTdNlHefYWOXKQfHvz_9lv8z1NERFHBk7Bu1NzZc31xv45iIH2wodbmv1FooaSpdNejDMsaTdEZv2PmA7aDmr6s7s9Bbqkce_AepJbU9sdrFQ_pEvk7FO8_zWXmrs-nZt7KG3NNU_VPMr_LmUR0p_bmuwlCz75OPYVrIvkeBhDVSxAQy6Ig79E6uOtuglIXUUEcWCvk65JMFGy7C4Zji7ivUUCQeKYOxd5jIeJQwurtIzqfILz8p3cLKoMfwHqMgB7mdLt8pWG6m
+
+
+# Architecture
 ## nginx.conf
 
 Here's a high-level description of what this code is doing:

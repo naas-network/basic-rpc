@@ -1,2 +1,7 @@
 .bitcoin
+.ethereum
 .env
+jwt
+naas-apikeys/
+data
+redis-data

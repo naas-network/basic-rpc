@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+
+  test:
+    env_file:
+      - .env
+    build: ./test
+    # depends_on:
+    #   - redis
+    #   - openresty
+    networks:
+      - naas_network
+
+networks:
+  naas_network:
+    name: naas_network
