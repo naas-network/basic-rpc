@@ -1,3 +1,4 @@
+import os
 import requests
 import redis
 import random
@@ -6,11 +7,15 @@ import json
 
 # Step 1: Set a random API key to Redis with a low number of quota
 
+# read the environment variables
+redis_password = os.getenv('REDIS_PASSWORD')
+redis_hostname = os.getenv('REDIS_HOSTNAME')
+
 # Generate a random API key
 api_key = ''.join(random.choices(string.ascii_letters + string.digits, k=32))
 
 # Connect to Redis
-r = redis.Redis(host='localhost', port=6379, db=0)
+r = redis.Redis(host=redis_hostname, password=redis_password)
 
 # Set the API key in Redis with a low quota
 quota = 5
@@ -30,7 +35,7 @@ headers = {
 }
 
 # Prepare the URL
-url = f"http://localhost/{api_key}"
+url = f"http://openresty/{api_key}"
 
 # Step 3: Check if the response is correct until the quota is depleted
 
